@@ -1,0 +1,34 @@
+name: tvcastor
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.4.3 <4.0.0"
+
+dependencies:
+  animated_flutter_widgets: ^0.0.2
+  flutter:
+    sdk: flutter
+  flutter_carousel_widget: ^2.2.0
+  flutter_sticky_widgets: ^0.0.3
+  font_awesome_flutter: ^10.7.0
+  http: ^1.2.1
+  system_resources: ^1.6.0
+  castscreen: ^1.0.2
+  webview_flutter: ^4.8.0
+  crypto: ^3.0.3
+  xml: ^6.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+fonts:
+  - family: ComicRelief
+    fonts:
+      - asset: fonts/ComicRelief.ttf
