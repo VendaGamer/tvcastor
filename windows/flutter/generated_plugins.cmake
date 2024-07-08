@@ -5,7 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   nb_utils
-  webview_universal
+  webview_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

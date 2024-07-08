@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tvcastor/pages/webview_page.dart';
+import 'package:tvcastor/pages/webview_page_mobile.dart';
 import 'package:upnp_client/upnp_client.dart' as upnp;
+
+import 'pages/webview_page_windows.dart';
 
 class DeviceWidget extends StatelessWidget {
   final upnp.Device device;
@@ -27,11 +31,19 @@ class DeviceWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => const WebViewPage() //page webview
-              ),
-        );
+        if (Platform.isWindows) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => const WebViewPageWindows() //page webview
+                ),
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => const WebViewPage() //page webview
+                ),
+          );
+        }
       },
       child: Container(
         color: Colors.amber[900],

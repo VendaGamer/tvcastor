@@ -21,7 +21,8 @@ dependencies:
   upnp_client:
     path: ./libs/upnp_client/
   flex_color_scheme: ^7.3.1
-  webview_universal: ^0.0.5
+  webview_flutter: ^4.8.0
+  webview_windows: ^0.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

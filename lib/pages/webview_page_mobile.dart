@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webview_universal/webview_universal.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({super.key});
@@ -9,17 +9,25 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-  final _webViewController = WebViewController();
   bool isBusy = false;
-  @override
-  void initState() {
-    super.initState();
-    _webViewController.init(
-      context: context,
-      setState: setState,
-      uri: Uri.parse('https://prehrajto.cz'),
-    );
-  }
+  late final WebViewController _controller = WebViewController()
+    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    ..setBackgroundColor(const Color(0x00000000))
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {
+          // Update loading bar.
+        },
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onHttpError: (HttpResponseError error) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          return NavigationDecision.navigate;
+        },
+      ),
+    )
+    ..loadRequest(Uri.parse('https://prehrajto.cz'));
 
   void findMedia() async {
     String js = '''
@@ -70,18 +78,12 @@ class _WebViewPageState extends State<WebViewPage> {
     return mediaElements;
   })();
 ''';
-    if (_webViewController.is_desktop) {
-      var result = await _webViewController.webview_desktop_controller
-          .evaluateJavaScript(js);
-      print(result);
-    }
+    final result = await _controller.runJavaScriptReturningResult(js);
+    print(result);
   }
 
   @override
   Widget build(BuildContext context) {
-      final _webView= WebView(
-        controller: _webViewController,
-      ).createElement();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: findMedia,
@@ -90,7 +92,9 @@ class _WebViewPageState extends State<WebViewPage> {
       appBar: AppBar(
         title: const Text('WebView'),
       ),
-      body: ,
+      body: Center(
+        child: WebViewWidget(controller: _controller),
+      ), //here is gonna be webView
     );
   }
 }
