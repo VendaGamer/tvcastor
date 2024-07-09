@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tvcastor/pages/webview_page_mobile.dart';
-import 'package:upnp_client/upnp_client.dart' as upnp;
+import 'package:castscreen/castscreen.dart' as upnp;
 
 import 'pages/webview_page_windows.dart';
 
@@ -14,20 +14,15 @@ class DeviceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final friendlyName =
-        device.deviceDescription?.friendlyName ?? 'Unknown Device';
-    final urlBase = device.url ?? 'No URL';
+        device.spec.friendlyName;
+    final urlBase = device.spec.URLBase;
     Widget icon;
-    if (device.deviceDescription?.icons.isNotEmpty ?? false) {
-      final iconUrl =
-          urlBase + device.deviceDescription!.icons.first.url.toString();
+    var iconUrl = device.spec.iconSpecs.first.url;
       print(iconUrl);
       icon = Image.network(iconUrl, width: 40, height: 40,
           errorBuilder: (context, error, stackTrace) {
         return const Icon(Icons.tv);
-      });
-    } else {
-      icon = const Icon(Icons.tv);
-    }
+    });
 
     return GestureDetector(
       onTap: () {

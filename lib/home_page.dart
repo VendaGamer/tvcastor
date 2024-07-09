@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tvcastor/device_widgets.dart';
-import 'package:upnp_client/upnp_client.dart' as upnp;
+import 'package:castscreen/castscreen.dart' as upnp;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,16 +9,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _deviceDiscover = upnp.DeviceDiscoverer();
   bool isBusy = false;
   List<upnp.Device> _devices = [];
 
   Future<List<upnp.Device>> _discoverDevices() async {
-    await _deviceDiscover.start(
-      addressType: InternetAddressType.any,
-    );
-
-    final devices = await _deviceDiscover.getDevices();
+    final devices = await upnp.CastScreen.discoverDevice(
+        ipv4: true, ipv6: true, ST: 'upnp:rootdevice');
+    devices.forEach(print);
     return devices;
   }
 
