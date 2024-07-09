@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tvcastor/device_widgets.dart';
-import 'package:upnp_client/upnp_client.dart' as upnp;
+import 'package:upnp2/upnp.dart' as upnp;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,23 +13,41 @@ class _HomePageState extends State<HomePage> {
   bool isBusy = false;
   List<upnp.Device> _devices = [];
 
-  Future<List<upnp.Device>> _discoverDevices() async {
-    await _deviceDiscover.start(
-      addressType: InternetAddressType.any,
+  void _discoverDevices() async {
+    if (isBusy) return;
+    setState(() {
+      isBusy = true;
+      _devices.clear();
+    });
+    print('start');
+    await _deviceDiscover.start(ipv4: true, ipv6: true);
+    _deviceDiscover
+        .quickDiscoverClients(
+      unique: true,
+    )
+        .listen(
+      (client) async {
+        var device = await client.getDevice();
+        if (device == null) return;
+        print(device);
+        setState(() {
+          _devices.add(device);
+        });
+      },
+    ).onDone(
+      () {
+        setState(() {
+          isBusy = false;
+        });
+        print('end');
+        _deviceDiscover.stop();
+      },
     );
-
-    final devices = await _deviceDiscover.getDevices();
-    return devices;
   }
 
-  void discovery() async {
-    if (isBusy) return;
-    isBusy = true;
-    final found = await _discoverDevices();
-    setState(() {
-      _devices = found;
-    });
-    isBusy = false;
+  @override
+  void initState() {
+    super.initState();
   }
 
   void ShowSideBar() {}
@@ -46,7 +63,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             disabledColor: Colors.grey,
-            onPressed: discovery,
+            onPressed: _discoverDevices,
             icon: const Icon(Icons.refresh),
           ),
         ],

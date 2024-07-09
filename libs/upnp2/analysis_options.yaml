@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+
+# https://www.dartlang.org/guides/language/analysis-options
+analyzer:
+  exclude:
+    - example/*.dart

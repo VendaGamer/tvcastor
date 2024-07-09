@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tvcastor/pages/webview_page_mobile.dart';
-import 'package:upnp_client/upnp_client.dart' as upnp;
+import 'package:upnp2/upnp.dart' as upnp;
 
 import 'pages/webview_page_windows.dart';
 
@@ -14,20 +14,18 @@ class DeviceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final friendlyName =
-        device.deviceDescription?.friendlyName ?? 'Unknown Device';
-    final urlBase = device.url ?? 'No URL';
-    Widget icon;
-    if (device.deviceDescription?.icons.isNotEmpty ?? false) {
-      final iconUrl =
-          urlBase + device.deviceDescription!.icons.first.url.toString();
-      print(iconUrl);
-      icon = Image.network(iconUrl, width: 40, height: 40,
-          errorBuilder: (context, error, stackTrace) {
-        return const Icon(Icons.tv);
-      });
-    } else {
-      icon = const Icon(Icons.tv);
-    }
+        device.friendlyName ?? 'UNKNOWN NAME';
+    final urlBase = device.url ?? 'UNKNOWN URL';
+    Widget icon = device.icons.isEmpty || device.icons.first.url == null
+        ? const Icon(Icons.tv)
+        : Image.network(
+            device.icons.first.url!,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.tv);
+            },
+          );
+
+
 
     return GestureDetector(
       onTap: () {
@@ -47,7 +45,7 @@ class DeviceWidget extends StatelessWidget {
       },
       child: Container(
         color: Colors.amber[900],
-        padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+        padding: const EdgeInsets.all(20),
         child: Row(
           children: [
             Column(
