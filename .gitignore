@@ -30,7 +30,6 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-!libs/**
 
 # Symbolication related
 app.*.symbols
@@ -42,3 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Whitelist the libs folder
+!libs/**
